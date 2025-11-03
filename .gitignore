@@ -1,0 +1,39 @@
+﻿# Dependencies
+node_modules/
+target/
+build/
+dist/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Keys and secrets
+*.key
+*.pem
+*.keypair.json
+*.secret
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Circuit files (large)
+*.ptau
+packages/circuits/build/
+
+# Solana
+test-ledger/
+.anchor/

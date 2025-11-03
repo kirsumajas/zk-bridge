@@ -1,0 +1,11 @@
+﻿{
+  "name": "@ton-sol-zk-bridge/relayer",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node src/index.js",
+    "start": "node src/index.js",
+    "test": "echo 'Relayer tests'",
+    "clean": "echo 'Clean relayer'"
+  }
+}

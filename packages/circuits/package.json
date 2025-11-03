@@ -1,0 +1,11 @@
+﻿{
+  "name": "@ton-sol-zk-bridge/circuits",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "npm run compile",
+    "compile": "echo 'Circuit compilation'",
+    "test": "echo 'Circuit tests'",
+    "clean": "echo 'Clean circuits'"
+  }
+}
