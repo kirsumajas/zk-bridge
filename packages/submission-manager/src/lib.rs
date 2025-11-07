@@ -56,7 +56,7 @@ impl SubmissionManager {
             &config.solana_rpc_url,
             &config.solana_program_id,
             &config.solana_bridge_account,
-            config.verification_key.as_deref(),
+            config.verification_key.as_ref().map(|s| s.as_str()),
         )?;
 
         // Initialize metrics
@@ -255,14 +255,17 @@ impl SubmissionManager {
         // Check if we should retry
         if self.retry_engine.should_retry(batch.retry_count) {
             // METRIC: Batch retry
-            self.metrics.batch_retries.inc();
+             self.metrics.batch_retries.inc();
+        
+            // FIX: Store retry_count before moving batch
+            let retry_count = batch.retry_count + 1;
             
             // Re-queue the batch for retry
             let mut retry_batch = batch;
-            retry_batch.retry_count += 1;
+            retry_batch.retry_count = retry_count;
             
             self.queue_manager.enqueue_batch(retry_batch).await;
-            log::info!("🔄 Batch re-queued for retry (attempt {})", retry_batch.retry_count);
+        log::info!("🔄 Batch re-queued for retry (attempt {})", retry_count);  // Use stored value
         } else {
             // METRIC: Max retries exceeded
             self.metrics.max_retries_exceeded.inc();

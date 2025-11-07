@@ -1,4 +1,4 @@
-use prometheus::{Counter, Gauge, Histogram, Registry};
+use prometheus::{Counter, Gauge, Histogram, HistogramOpts,  Registry};
 
 pub struct BridgeMetrics {
     // Counters
@@ -53,11 +53,11 @@ impl BridgeMetrics {
             solana_rpc_latency: Gauge::new("solana_rpc_latency_ms", "Solana RPC latency in ms")?,
             
             proof_generation_time: Histogram::with_opts(
-                HistogramOpts::new("proof_generation_time", "Time taken to generate ZK proofs")
+                HistogramOpts::new("proof_generation_time_seconds", "Time taken to generate ZK proofs in seconds")
             )?,
-            solana_tx_time: Histogram::new(
-                "solana_tx_time_seconds", 
-                "Solana transaction time in seconds"
+            
+            solana_tx_time: Histogram::with_opts(  // CHANGE THIS ONE
+                HistogramOpts::new("solana_tx_time_seconds", "Solana transaction time in seconds")
             )?,
 
             // New metrics
@@ -65,9 +65,8 @@ impl BridgeMetrics {
             batch_submission_failures: Counter::new("batch_submission_failures_total", "Total batch submission failures")?,
             batch_validation_failures: Counter::new("batch_validation_failures_total", "Total batch validation failures")?,
             batch_timeouts: Counter::new("batch_timeouts_total", "Total batch timeouts")?,
-            batch_processing_time: Histogram::new(
-                "batch_processing_time_seconds",
-                "Total batch processing time in seconds"
+            batch_processing_time: Histogram::with_opts(  // AND THIS ONE
+                HistogramOpts::new("batch_processing_time_seconds", "Total batch processing time in seconds")
             )?,
             
             network_failures: Counter::new("network_failures_total", "Total network failures")?,

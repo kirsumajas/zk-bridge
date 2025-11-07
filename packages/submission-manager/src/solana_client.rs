@@ -11,7 +11,7 @@ use solana_sdk::{
 use std::str::FromStr;
 use crate::{OrchestratorError, Result};
 
-#[derive(Clone)] 
+
 pub struct SolanaClient {
     rpc_client: RpcClient,
     keypair: Keypair,

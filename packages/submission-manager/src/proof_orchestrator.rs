@@ -48,7 +48,7 @@ impl ProofOrchestrator {
 
         if !response.status().is_success() {
             return Err(OrchestratorError::NetworkError(
-                reqwest::Error::from(response.status())
+                reqwest::Error::from(response.error_for_status().unwrap_err())
             ));
         }
 
