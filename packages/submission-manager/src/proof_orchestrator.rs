@@ -54,7 +54,7 @@ impl ProofOrchestrator {
 
         let proof_data: serde_json::Value = response.json()
             .await
-            .map_err(OrchestratorError::SerializationError)?;
+            .map_err(|e| OrchestratorError::SerializationError(serde_json::Error::from(e)))?;
 
         Ok(proof_data["proof"]
             .as_str()

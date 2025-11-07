@@ -6,7 +6,6 @@ use solana_sdk::{
     transaction::Transaction,
     instruction::Instruction,
     pubkey::Pubkey,
-    system_instruction,
 };
 use std::str::FromStr;
 use crate::{OrchestratorError, Result};
@@ -140,5 +139,24 @@ impl SolanaClient {
         let account_data = self.rpc_client.get_account_data(&self.bridge_account)?;
         log::info!("Bridge account data: {} bytes", account_data.len());
         Ok(())
+    }
+}
+
+impl Clone for SolanaClient {
+    fn clone(&self) -> Self {
+        // Create a new RpcClient with the same URL
+        let rpc_client = RpcClient::new(self.rpc_client.url().to_string());
+        
+        // Clone the keypair by serializing/deserializing
+        let keypair_bytes = self.keypair.to_bytes();
+        let keypair = Keypair::from_bytes(&keypair_bytes)
+            .expect("Failed to clone keypair");
+        
+        SolanaClient {
+            rpc_client,
+            keypair,
+            program_id: self.program_id,
+            bridge_account: self.bridge_account,
+        }
     }
 }
