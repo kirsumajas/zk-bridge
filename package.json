@@ -1,23 +1,40 @@
-﻿{
+{
   "name": "ton-sol-zk-bridge",
-  "version": "1.0.0",
-  "description": "Zero-Knowledge Bridge between TON and Solana",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
-    "build": "npm run build -ws",
-    "test": "npm run test -ws",
-    "dev": "docker-compose up -d && npm run dev -ws",
-    "clean": "npm run clean -ws",
-    "setup": "echo 'Run: npm install && npm run build'"
+    "build": "anchor build",
+    "deploy": "anchor deploy",
+    "test": "anchor test",
+    "build:submission-manager": "cd packages/submission-manager && cargo build",
+    "start:submission-manager": "cd packages/submission-manager && cargo run",
+    "test:submission-manager": "cd packages/submission-manager && cargo test"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.0.0"
+    "@coral-xyz/anchor": "^0.31.0",
+    "@types/chai": "^5.2.3",
+    "@types/mocha": "^10.0.10",
+    "chai": "^6.2.0",
+    "mocha": "^11.7.4",
+    "ts-mocha": "^11.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   },
-  "engines": {
-    "node": ">=18.0.0"
-  }
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@solana/spl-token": "^0.1.8",
+    "@solana/web3.js": "^1.98.4",
+    "circomlib": "^2.0.5",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "snarkjs": "^0.7.5"
+  },
+  "type": "commonjs"
 }

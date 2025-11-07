@@ -1,0 +1,23 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package.json first
+COPY packages/circuits/package.json .
+
+# Remove circom from dependencies and install others
+RUN sed -i '/"circom"/d' package.json && \
+    npm install
+
+# Copy circuit files (they won't break the build without circom)
+COPY packages/circuits/ .
+
+# Install express and cors for the HTTP server
+RUN npm install express cors
+
+# Copy your existing circuit server
+COPY docker/circuits-server.js .
+
+EXPOSE 8080
+
+CMD ["node", "circuits-server.js"]

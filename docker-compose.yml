@@ -1,14 +1,107 @@
 ﻿version: '3.8'
 
 services:
+  # Solana validator for local development
   solana-validator:
     image: solanalabs/solana:v1.17.17
     ports:
-      - "8899:8899"
-      - "8900:8900"
-    command: |
-      solana-test-validator \
-        --rpc-port 8899 \
-        --ws-port 8900 \
-        --reset \
-        --quiet
+      - "8899:8899"  # RPC
+      - "8900:8900"  # WebSocket  
+      - "9900:9900"  # Faucet
+    command: solana-test-validator --rpc-port 8899 --ws-port 8900 --faucet-port 9900 --reset
+    healthcheck:
+      test: ["CMD", "solana", "cluster-version", "--url", "http://localhost:8899"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  # Circuit Service for proof generation
+  circuit-service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.circuits
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./packages/circuits:/app
+    working_dir: /app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Rust Submission Manager
+  submission-manager:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.submission-manager
+    ports:
+      - "3000:3000"  # HTTP API
+    environment:
+      - RUST_LOG=info
+      - SOLANA_RPC_URL=http://solana-validator:8899
+      - CIRCUIT_SERVICE_URL=http://circuit-service:8080
+      - BATCH_SIZE=5
+      - MAX_RETRIES=3
+    depends_on:
+      solana-validator:
+        condition: service_healthy
+      circuit-service:
+        condition: service_healthy
+    volumes:
+      - ./packages/submission-manager:/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # TypeScript Relayer
+  relayer:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.relayer
+    ports:
+      - "3001:3001"  # Relayer API
+    environment:
+      - SUBMISSION_MANAGER_URL=http://submission-manager:3000
+      - SOLANA_RPC_URL=http://solana-validator:8899
+      - TON_RPC_URL=https://testnet.toncenter.com/api/v2/jsonRPC
+      - DATABASE_PATH=/app/data/ton_bridge.db
+      - PORT=3001
+    depends_on:
+      submission-manager:
+        condition: service_healthy
+    volumes:
+      - ./packages/relayer:/app
+      - ./data:/app/data
+      - /app/node_modules
+    restart: unless-stopped
+
+     # DEVELOPMENT CONTAINER - Add this service
+  dev-environment:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    volumes:
+      # Mount your entire project for live development
+      - .:/workspace
+      # Persist cargo cache to avoid re-downloading dependencies
+      - cargo-cache:/usr/local/cargo
+      - registry-cache:/root/.cargo/registry
+    working_dir: /workspace
+    environment:
+      - RUST_BACKTRACE=1
+      - CARGO_TARGET_DIR=/workspace/target-docker
+    stdin_open: true
+    tty: true
+    profiles: ["dev"]  # Only start when using --profile dev
+
+volumes:
+  cargo-cache:
+  registry-cache:

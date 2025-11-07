@@ -1,11 +1,20 @@
-﻿{
-  "name": "@ton-sol-zk-bridge/circuits",
+{
+  "name": "ton-bridge-circuits",
   "version": "1.0.0",
-  "type": "module",
+  "description": "ZK Circuits for TON-Solana Bridge",
   "scripts": {
-    "build": "npm run compile",
-    "compile": "echo 'Circuit compilation'",
-    "test": "echo 'Circuit tests'",
-    "clean": "echo 'Clean circuits'"
+    "build:ton": "echo 'Mock circuit build - circom not available'",
+    "setup": "echo 'Mock setup'",
+    "compile:ton": "echo 'Mock compilation'",
+    "test:ton": "node scripts/test_ton_verifier.js",
+    "generate:input": "node scripts/generate_ton_inputs.js"
+  },
+  "dependencies": {
+    "circomlib": "^2.0.5",
+    "ffjavascript": "^0.3.0",
+    "snarkjs": "^0.7.0"
+  },
+  "devDependencies": {
+    "mocha": "^10.0.0"
   }
 }

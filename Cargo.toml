@@ -1,0 +1,42 @@
+[workspace]
+members = [
+    "packages/solana-program",
+    "packages/submission-manager",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+
+[patch.crates-io]
+
+
+[workspace.dependencies]
+anchor-lang = "0.32.1"
+tokio = { version = "1.0", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+reqwest = { version = "0.11", default-features = false, features = ["rustls-tls"] }
+
+
+thiserror = "1.0"
+log = "0.4"
+chrono = { version = "0.4", features = ["serde"] }
+rand = "0.8.5"
+warp = "0.3"
+rsa = { version = "=0.9.8" }
+zeroize = { version = "=1.8.2" }
+sqlx = "0.8.6"
+sqlx-core = "0.8.6"
+sqlx-mysql = "0.8.6"
+
+
+
+# Required for Anchor/Solana BPF programs
+[profile.release]
+overflow-checks = true
+
+[profile.dev]
+overflow-checks = true

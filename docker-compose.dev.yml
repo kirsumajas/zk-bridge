@@ -1,0 +1,19 @@
+services:
+  dev-environment:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    volumes:
+      - .:/workspace
+      - cargo-cache:/usr/local/cargo
+      - registry-cache:/root/.cargo/registry
+    working_dir: /workspace
+    environment:
+      - RUST_BACKTRACE=1
+      - CARGO_TARGET_DIR=/workspace/target-docker
+    stdin_open: true
+    tty: true
+
+volumes:
+  cargo-cache:
+  registry-cache:

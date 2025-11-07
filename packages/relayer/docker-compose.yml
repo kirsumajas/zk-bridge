@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  relayer:
+    build: .
+    environment:
+      - TON_RPC_URL=${TON_RPC_URL}
+      - SUBMISSION_MANAGER_URL=http://submission-manager:3001
+      - POLL_INTERVAL=5000
+    restart: unless-stopped

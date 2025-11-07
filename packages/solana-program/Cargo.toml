@@ -1,0 +1,28 @@
+﻿[package]
+name = "zk_lc"
+version = "0.1.0"
+description = "TON Light Client ZK Verifier"
+edition = "2021"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+idl-build = ["anchor-lang/idl-build"]
+production = []
+default = []
+
+[dependencies]
+anchor-lang = { version = "0.32.1", features = ["init-if-needed"] }
+solana-program = "2"  # Consistent with other packages
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "zk_lc"
+
+[profile.release]
+overflow-checks = true
+
+[profile.dev]
+overflow-checks = true

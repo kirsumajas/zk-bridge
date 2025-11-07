@@ -1,0 +1,9 @@
+[provider]
+cluster = "localnet"
+wallet = "/root/.config/solana/id.json"
+
+[programs.localnet]
+zk_lc = "8zcmz77ahioCSGX7QnmFL51a1A3qBY1nw5az7R11KF9o"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

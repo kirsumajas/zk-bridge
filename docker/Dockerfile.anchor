@@ -1,0 +1,8 @@
+FROM docker.io/backpackapp/build:v0.31.0
+
+# Install only Anchor CLI
+RUN cargo install --locked anchor-cli --version 0.31.0
+
+WORKDIR /workspace
+
+CMD ["anchor", "--version"]

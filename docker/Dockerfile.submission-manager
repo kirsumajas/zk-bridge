@@ -1,0 +1,13 @@
+FROM rust:latest
+
+WORKDIR /app
+
+# Copy the entire workspace
+COPY . .
+
+# Build only the submission-manager package from the workspace
+RUN cargo build --release --package submission-manager
+
+EXPOSE 3000
+
+CMD ["./target/release/submission-manager"]
