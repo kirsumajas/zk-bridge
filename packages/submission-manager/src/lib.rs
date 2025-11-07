@@ -56,7 +56,7 @@ impl SubmissionManager {
             &config.solana_rpc_url,
             &config.solana_program_id,
             &config.solana_bridge_account,
-            config.verification_key.as_ref().map(String::as_str),
+            Some(config.verification_key.as_str()),
         )?;
 
         // Initialize metrics
